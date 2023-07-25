@@ -12,7 +12,7 @@ urlpatterns = [
     # path for about view
     path(route='about/', view=views.about, name='about'),
     # path for contact us view
-    path(route='contact-us', view=views.contact, name='contact-us'),
+    path(route='contact_us/', view=views.contact, name='contact_us'),
     # path for registration
 
     # path for login

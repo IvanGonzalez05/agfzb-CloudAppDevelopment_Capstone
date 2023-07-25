@@ -22,7 +22,7 @@ def about(request):
 
 # Create a `contact` view to return a static contact page
 def contact(request):
-    return render(request, 'djangoapp/contact-us.html')
+    return render(request, 'djangoapp/contact_us.html')
 
 # Create a `login_request` view to handle sign in request
 # def login_request(request):
