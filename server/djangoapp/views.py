@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime
 import logging
@@ -34,29 +35,28 @@ def login_request(request):
 
         if user is not None:
             login(request, user)
-            return redirect('djangoapp/')
-        else:
+            context["user"] = user
             return render(request, 'djangoapp/index.html', context)
-    else:
-        return render(request, 'djangoapp/index.html', context)
+
+    return render(request, 'djangoapp/index.html', context)
 
 # Create a `logout_request` view to handle sign out request
+@login_required
 def logout_request(request):
     context = {}
     # logout user in request. Its simple.
     logout(request)
-    # return redirect(request, 'djangoapp:index', context)
+    return redirect('djangoapp:index')
+    # return render(request, 'djangoapp/index.html', context=context)
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
     context = {}
     # if http method is GET, render the form
-    print('Registration')
     if request.method == "GET":
         return render(request, 'djangoapp/registration.html', context)
     # if http method is POST, create user
     elif request.method == "POST":
-        print('is a post method')
         # get user data from post request
         username = request.POST["username"]
         first_name = request.POST["firstname"]
@@ -73,17 +73,15 @@ def registration_request(request):
             logger.debug("{} is new user".format(username))
         
         if not user_exists:
-            print('creating user')
             user = User.objects.create(
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
                 password=password
             )
-            print('login user')
             login(request, user=user)
-            print('befor redirect')
-            return redirect('djangoapp/')
+            context["user"] = user
+            return render(request, 'djangoapp/index.html', context=context)
         else:
             return render(request, 'djangoapp/registration.html', context)
         
