@@ -29,11 +29,3 @@ def main(param_dict):
     except (requests.exceptions.RequestException, ConnectionResetError) as err:
         print("connection error")
         return {"error": err}
-
-params = {
-    "COUCH_USERNAME": "c83e48b3-ddc6-4cb6-91d6-579a7eec5feb-bluemix",
-    "IAM_API_KEY": "ydfmMHAr4bqft6IwjMSZBHMthGdNQt4z-RCpyo6Boj9z",
-    "DEALERSHIP_ID": 15
-}
-
-main(params)
