@@ -23,17 +23,26 @@
                     </li>
                 </div>
                 <div class="nav-item d-flex flex-row">
-                    <li class>
-                        <form method="post">
+                    {% if user.is_authenticated %}
+                    <div class="d-flex flex-row">
+                        <li>
+                            <p class="nav-link active">{{ user.username }}</p>
+                        </li>
+                        <li>
+                            <a href="{% url 'djangoapp:logout' %}" class="nav-link active">Log out</a>
+                        </li>
+                    </div>
+                    {% else %}
+                    <li>
+                        <form method="POST" action="{% url 'djangoapp:login' %}">
+                            {% csrf_token %}
                             <input type="text" name="username" id="username_id" placeholder="Username">
                             <input type="password" name="password" id="password_id" placeholder="Password">
-                            <a href="{% url 'djangoapp:login' %}"  id="btn-login" class="btn btn-primary me-1">Log in</button>
+                            <button type="submit"  id="btn-login" class="btn btn-primary me-1">Log in</button>
                             <a href="{% url 'djangoapp:signup' %}" id="btn-signup">Sign Up</button>
                         </form>
                     </li>
-                    <!-- <li>
-                        <a href="{% url 'djangoapp:logout' %}" class="nav-link active">Log out</a>
-                    </li> -->
+                    {% endif %}
                 </div>
             </ul>
         </nav>
