@@ -26,27 +26,3 @@ def main(param_dict):
     except (requests.exceptions.RequestException, ConnectionResetError) as err:
         print("connection error")
         return {"error": err}
-
-
-new_review = {
-    "review": 
-        {
-            "id": 1114,
-            "name": "Upkar Lidder",
-            "dealership": 15,
-            "review": "Great service!",
-            "purchase": False,
-            "another": "field",
-            "purchase_date": "02/16/2021",
-            "car_make": "Audi",
-            "car_model": "Car",
-            "car_year": 2021
-        }
-}
-params = {
-    "COUCH_USERNAME": "c83e48b3-ddc6-4cb6-91d6-579a7eec5feb-bluemix",
-    "IAM_API_KEY": "ydfmMHAr4bqft6IwjMSZBHMthGdNQt4z-RCpyo6Boj9z",
-    "REVIEW": new_review
-}
-
-main(params)
