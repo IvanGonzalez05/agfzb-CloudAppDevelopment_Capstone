@@ -14,6 +14,79 @@ import json
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+fake_dealerships = [
+    {
+        "_id":"b4fd620059e3126b951c144b7c16b2bb",
+        "_rev":"1-34e7ebd07643af43db578a46ee1d6365",
+        "id":1,
+        "city":"El Paso",
+        "state":"Texas",
+        "st":"TX",
+        "address":"3 Nova Court",
+        "zip":"88563",
+        "lat":31.6948,
+        "long":-106.3,
+        "short_name":"Holdlamis",
+        "full_name":"Holdlamis Car Dealership"
+    },
+    {
+        "_id":"b4fd620059e3126b951c144b7c16ba98",
+        "_rev":"1-d1778a396ca8cb0ef2966a9854eb93ee",
+        "id":2,
+        "city":"Minneapolis",
+        "state":"Minnesota",
+        "st":"MN",
+        "address":"6337 Butternut Crossing",
+        "zip":"55402",
+        "lat":44.9762,
+        "long":-93.2759,
+        "short_name":"Temp",
+        "full_name":"Temp Car Dealership"
+      },
+    {
+            "_id":"b4fd620059e3126b951c144b7c16c1d6",
+            "_rev":"1-cc5d5c13aa879d1cef8253dfa1dce77d",
+            "id":3,
+            "city":"Birmingham",
+            "state":"Alabama",
+            "st":"AL",
+            "address":"9477 Twin Pines Center",
+            "zip":"35285",
+            "lat":33.5446,
+            "long":-86.9292,
+            "short_name":"Sub-Ex",
+            "full_name":"Sub-Ex Car Dealership"
+         }
+   ]
+
+fake_reviews = [
+      {
+            "_id":"2f776d69d096c0262460927edb846e31",
+            "_rev":"1-6d3a316e140863cdb147048888d26051",
+            "id":1,
+            "name":"Berkly Shepley",
+            "dealership":15,
+            "review":"Total grid-enabled service-desk",
+            "purchase":True,
+            "purchase_date":"07/11/2020",
+            "car_make":"Audi",
+            "car_model":"A6",
+            "car_year":2010
+      },
+      {
+            "_id":"2f776d69d096c0262460927edb847625",
+            "_rev":"1-0cbc084ce570374a1d0c2653ceb254ad",
+            "id":2,
+            "name":"Gwenora Zettoi",
+            "dealership":23,
+            "review":"Future-proofed foreground capability",
+            "purchase":True,
+            "purchase_date":"09/17/2020",
+            "car_make":"Pontiac",
+            "car_model":"Firebird",
+            "car_year":1995
+         }
+   ]
 
 # Create your views here.
 
@@ -90,29 +163,36 @@ def get_dealerships(request):
     context = {}
     if request.method == "GET":
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/55b76625-6fe5-492e-8ba0-484277bf348c/dealership-package/get_dealerships"
-        dealerships = get_dealers_from_cf(url)
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        return HttpResponse(dealer_names)
-        # return render(request, 'djangoapp/index.html', context)
+        # dealerships = get_dealers_from_cf(url)
+        # context["dealerships"] = dealerships
+        context["dealerships"] = fake_dealerships
+        return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
+    context = {}
     if request.method == "GET":
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/55b76625-6fe5-492e-8ba0-484277bf348c/dealership-package/get-review"
-        reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        return HttpResponse(reviews)
+        # reviews = get_dealer_reviews_from_cf(url, dealer_id)
+        context["reviews"] = fake_reviews
+        return render(request, 'djangoapp/dealer_details.html', context=context)
 
 @login_required
 def add_review(request, dealer_id):
     # to validate if user is authenticated (changed for decorator)
     # if request.user.is_authenticated:
-    url = "https://us-south.functions.appdomain.cloud/api/v1/web/55b76625-6fe5-492e-8ba0-484277bf348c/dealership-package/post-review"
-    review = {
-        "time": datetime.utcnow().isoformat(),
-        "dealership": 11,
-        "review": "This is a great car dealer"
-    }
-    json_payload = { "review": review }
-    response = post_request(url, json_payload, 11)
-    return HttpResponse(response)
+    print("add review test")
+    print(request.method)
+    if request.method == "GET":
+        return render(request, 'djangoapp/add_review.html')
+    if request.method == "POST":
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/55b76625-6fe5-492e-8ba0-484277bf348c/dealership-package/post-review"
+        review = {
+            "time": datetime.utcnow().isoformat(),
+            "dealership": 11,
+            "review": "This is a great car dealer"
+        }
+        json_payload = { "review": review }
+        response = post_request(url, json_payload, 11)
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)

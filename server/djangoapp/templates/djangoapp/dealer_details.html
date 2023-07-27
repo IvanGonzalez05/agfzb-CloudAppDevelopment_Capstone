@@ -10,9 +10,52 @@
     <body>
 
     <!--Add a nav bar here -->
-
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex p-3 bd-highlight">
+        <ul  class="navbar-nav container-fluid">
+            <div class="d-flex me-auto flex-grow-1">
+                <li class="nav-item">
+                    <a href="{% url 'djangoapp:about' %}" class="nav-link active">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'djangoapp:contact_us' %}" class="nav-link active">Contact Us</a>
+                </li>
+            </div>
+            <div class="nav-item d-flex flex-row">
+                {% if user.is_authenticated %}
+                <div class="d-flex flex-row">
+                    <li>
+                        <p class="nav-link active">{{ user.username }}</p>
+                    </li>
+                    <li>
+                        <a href="{% url 'djangoapp:logout' %}" class="nav-link active">Log out</a>
+                    </li>
+                </div>
+                {% else %}
+                <li>
+                    <form method="POST" action="{% url 'djangoapp:login' %}">
+                        {% csrf_token %}
+                        <input type="text" name="username" id="username_id" placeholder="Username">
+                        <input type="password" name="password" id="password_id" placeholder="Password">
+                        <button type="submit"  id="btn-login" class="btn btn-primary me-1">Log in</button>
+                        <a href="{% url 'djangoapp:signup' %}" id="btn-signup">Sign Up</button>
+                    </form>
+                </li>
+                {% endif %}
+            </div>
+        </ul>
+    </nav>
     <!-- Add reviews as cards -->
-
+    <div class="card-colum w-25 p-4">
+        {% for review in reviews %}
+        <div class="card mt-2 p-2 bg-light">
+            <img src="{{MEDIA_URL}}/emoji/positive.png" alt="" class="card-img-left w-25">
+            <div class="card-body">
+                <h3 class="card-title">{{review.name}}</h3>
+                <h3 class="car-year">{{review.car_year}}</h3>
+                <p class="text">{{review.review}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     </body>
-
 </html>

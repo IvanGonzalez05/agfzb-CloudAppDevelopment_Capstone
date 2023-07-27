@@ -26,6 +26,9 @@
                     {% if user.is_authenticated %}
                     <div class="d-flex flex-row">
                         <li>
+                            <a href="{% url 'djangoapp:add_review' 1 %}" class="nav-link active">Add Review</a>
+                        </li>
+                        <li>
                             <p class="nav-link active">{{ user.username }}</p>
                         </li>
                         <li>
@@ -48,6 +51,34 @@
         </nav>
 
     <!--Add a dealer table here -->
-
+    <table id="table" class="table" data-filter-control="true">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Dealer Name</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>Zip</th>
+                <th data-filter-control="select">State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dealer in dealerships %}
+            <tr>
+                <td>{{dealer.id}}</td>
+                <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+                <td>{{dealer.city}}</td>
+                <td>{{dealer.address}}</td>
+                <td>{{dealer.zip}}</td>
+                <td>{{dealer.state}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     </body>
+    <script>
+        $(function() {
+            $("#table").bootstrapTable()
+        })        
+    </script>
 </html>
