@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
+from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -176,16 +176,18 @@ def get_dealer_details(request, dealer_id):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/55b76625-6fe5-492e-8ba0-484277bf348c/dealership-package/get-review"
         # reviews = get_dealer_reviews_from_cf(url, dealer_id)
         context["reviews"] = fake_reviews
+        context["dealer_id"] = dealer_id
         return render(request, 'djangoapp/dealer_details.html', context=context)
 
 @login_required
 def add_review(request, dealer_id):
     # to validate if user is authenticated (changed for decorator)
     # if request.user.is_authenticated:
-    print("add review test")
-    print(request.method)
+    context = {}
     if request.method == "GET":
-        return render(request, 'djangoapp/add_review.html')
+        context["dealer_id"] = dealer_id
+        context["cars"] = CarModel.objects.all()
+        return render(request, 'djangoapp/add_review.html', context=context)
     if request.method == "POST":
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/55b76625-6fe5-492e-8ba0-484277bf348c/dealership-package/post-review"
         review = {

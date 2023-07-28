@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dealership Review</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
+        <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+        <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex p-3 bd-highlight">
+            <ul  class="navbar-nav container-fluid">
+                <div class="d-flex me-auto flex-grow-1">
+                    <li class="nav-item">
+                        <a href="{% url 'djangoapp:index' %}" class="nav-link active">Dealerships</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'djangoapp:about' %}" class="nav-link active">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'djangoapp:contact_us' %}" class="nav-link active">Contact Us</a>
+                    </li>
+                </div>
+                <div class="nav-item d-flex flex-row">
+                    {% if user.is_authenticated %}
+                    <div class="d-flex flex-row">
+                        <li>
+                            <p class="nav-link active">{{ user.username }}</p>
+                        </li>
+                        <li>
+                            <a href="{% url 'djangoapp:logout' %}" class="nav-link active">Log out</a>
+                        </li>
+                    </div>
+                    {% else %}
+                    <li>
+                        <form method="POST" action="{% url 'djangoapp:login' %}">
+                            {% csrf_token %}
+                            <input type="text" name="username" id="username_id" placeholder="Username">
+                            <input type="password" name="password" id="password_id" placeholder="Password">
+                            <button type="submit"  id="btn-login" class="btn btn-primary me-1">Log in</button>
+                            <a href="{% url 'djangoapp:signup' %}" id="btn-signup">Sign Up</button>
+                        </form>
+                    </li>
+                    {% endif %}
+                </div>
+            </ul>
+        </nav>
+        <!-- Main content. HTML inserted from extensions of base.html -->
+        <main role="main" class="row justify-content-center">
+            <div class="main col-lg-11 col-md-10">
+                {% block content %} 
+                {% endblock %}
+            </div>
+        </main>
+    </body>
+</html>
